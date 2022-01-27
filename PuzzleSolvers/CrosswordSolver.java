@@ -1,3 +1,5 @@
+package PuzzleSolvers;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,7 +12,7 @@ public class CrosswordSolver {
 
     /**
      * Finds all values that matches the input string, where the wildcards are set in an alphabet
-     */ 
+     */
     public ArrayList<String> findAll(String chars, char[] alphabet, ArrayList<String> allMatches) {
         char[] temp = chars.toCharArray();
         for (int i = 0; i < temp.length; i++) {
