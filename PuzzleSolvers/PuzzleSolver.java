@@ -19,7 +19,7 @@ public class PuzzleSolver {
             File file = new File("Dictionary/enable1.txt");
             Scanner dictionaryReader = new Scanner(file);
             while (dictionaryReader.hasNext()) {
-                String word = dictionaryReader.nextLine();
+                String word = dictionaryReader.nextLine().toUpperCase();
                 if (!dictionarySortedByLength.containsKey(word.length())) {
                     dictionarySortedByLength.put(word.length(), new HashMap<String, String>());
                 }
@@ -34,50 +34,51 @@ public class PuzzleSolver {
         }
     }
 
-    public ArrayList<String> solveAnagram(String word) {
+    public List<String> solveAnagram(String word) {
         if (word.length() > 11) {
             return new ArrayList<>();
         }
         AnagramSolver anagramSolver = new AnagramSolver(dictionarySortedByLength.get(word.length()));
-        ArrayList<String> matches = anagramSolver.allPossible(word, true);
+        List<String> matches = anagramSolver.allPossible(word, true);
         matches = printMatches(matches);
         return matches;
     }
 
-    public ArrayList<String> solveCrossword(String word, String alphabet) {
+    public List<String> solveCrossword(String word, String alphabet) {
         CrosswordSolver crosswordSolver = new CrosswordSolver(dictionarySortedByLength.get(word.length()));
-        ArrayList<String> words = crosswordSolver.findAll(word, alphabet.toCharArray(), new ArrayList<String>());
+        List<String> words = crosswordSolver.findAll(word, alphabet.toCharArray(), new ArrayList<String>());
         words = printMatches(words);
         return words;
     }
 
-    public ArrayList<String> solveWordle(String word, String alphabet, String characterPositions) {
+    public List<String> solveWordle(String word, String alphabet, String characterPositions) {
         WordleSolver wordleSolver = new WordleSolver(dictionarySortedByLength.get(word.length()));
         HashMap<Integer, List<Character>> characterPositionsMap = populateCharacterPositionsMap(word, characterPositions);
-        ArrayList<String> words = wordleSolver.findAllPossibleMatches(word, alphabet.toCharArray(), characterPositionsMap, new ArrayList<String>());
+        char[] guaranteedCharacters = characterPositions.replaceAll("\\d", "").toCharArray();
+        List<String> words = wordleSolver.findAllPossibleMatches(word, alphabet.toCharArray(), guaranteedCharacters, characterPositionsMap, new ArrayList<String>());
         words = printMatches(words);
         return words;
     }
 
     private HashMap<Integer, List<Character>> populateCharacterPositionsMap(String word, String characterPositions) {
         HashMap<Integer, List<Character>> characterPositionsMap = new HashMap<Integer, List<Character>>();
-        if (characterPositions.length() > 0) {
-            for (int i = 1; i <= word.length(); i++) {
-                String[] characters = characterPositions.split(i + "");
-                List<Character> charactersNotAtIndex = new ArrayList<Character>();
+        for (int i = 1; i <= word.length(); i++) {
+            String[] characters = characterPositions.split(i + "");
+            List<Character> charactersNotAtIndex = new ArrayList<Character>();
+            if(characterPositions.length() > 0) {
                 for (String s : characters) {
                     char c = s.charAt(s.length() - 1);
                     if (Character.isLetter(c)) {
                         charactersNotAtIndex.add(c);
                     }
                 }
-                characterPositionsMap.put(i, charactersNotAtIndex);
             }
+            characterPositionsMap.put(i, charactersNotAtIndex);
         }
         return characterPositionsMap;
     }
 
-    private ArrayList<String> printMatches(ArrayList<String> matches) {
+    private List<String> printMatches(List<String> matches) {
         // remove duplicates
         for (int i = 0; i < matches.size(); i++) {
             String temp = matches.get(i);
