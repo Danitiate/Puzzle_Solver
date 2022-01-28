@@ -1,6 +1,8 @@
 package PuzzleSolvers;
+
 import java.util.Scanner;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,7 +35,7 @@ public class PuzzleSolver {
     }
 
     public ArrayList<String> solveAnagram(String word) {
-        if(word.length() > 11) {
+        if (word.length() > 11) {
             return new ArrayList<>();
         }
         AnagramSolver anagramSolver = new AnagramSolver(dictionarySortedByLength.get(word.length()));
@@ -49,11 +51,30 @@ public class PuzzleSolver {
         return words;
     }
 
-    public ArrayList<String> solveWordle(String word, String alphabet, String guaranteedCharacters) {
+    public ArrayList<String> solveWordle(String word, String alphabet, String characterPositions) {
         WordleSolver wordleSolver = new WordleSolver(dictionarySortedByLength.get(word.length()));
-        ArrayList<String> words = wordleSolver.findAllPossibleMatches(word, alphabet.toCharArray(), guaranteedCharacters.toCharArray());
+        HashMap<Integer, List<Character>> characterPositionsMap = populateCharacterPositionsMap(word, characterPositions);
+        ArrayList<String> words = wordleSolver.findAllPossibleMatches(word, alphabet.toCharArray(), characterPositionsMap, new ArrayList<String>());
         words = printMatches(words);
         return words;
+    }
+
+    private HashMap<Integer, List<Character>> populateCharacterPositionsMap(String word, String characterPositions) {
+        HashMap<Integer, List<Character>> characterPositionsMap = new HashMap<Integer, List<Character>>();
+        if (characterPositions.length() > 0) {
+            for (int i = 1; i <= word.length(); i++) {
+                String[] characters = characterPositions.split(i + "");
+                List<Character> charactersNotAtIndex = new ArrayList<Character>();
+                for (String s : characters) {
+                    char c = s.charAt(s.length() - 1);
+                    if (Character.isLetter(c)) {
+                        charactersNotAtIndex.add(c);
+                    }
+                }
+                characterPositionsMap.put(i, charactersNotAtIndex);
+            }
+        }
+        return characterPositionsMap;
     }
 
     private ArrayList<String> printMatches(ArrayList<String> matches) {

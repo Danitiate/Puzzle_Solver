@@ -2,6 +2,7 @@ package PuzzleSolvers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class WordleSolver {
     private HashMap<String, String> dictionary;
@@ -10,7 +11,7 @@ public class WordleSolver {
         this.dictionary = dictionary;
     }
 
-    public ArrayList<String> findAllPossibleMatches(String characters, char[] alphabet, char[] guaranteedCharacters) {
+    public ArrayList<String> findAllPossibleMatches(String characters, char[] alphabet, HashMap<Integer, List<Character>> characterPositionsMap, List<String> matches) {
         throw new RuntimeException("Method has not been implemented");
     }
 }

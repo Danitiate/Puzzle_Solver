@@ -3,7 +3,6 @@ import java.util.stream.Stream;
 import PuzzleSolvers.PuzzleSolver;
 
 class PuzzleSolverProgram {
-    
     public static void main(String[] args) {
         PuzzleSolver puzzleSolver = new PuzzleSolver();
         mainMenu(puzzleSolver);
@@ -44,10 +43,19 @@ class PuzzleSolverProgram {
                         userInput = inputScanner.nextLine().toUpperCase();
                         System.out.print("Excluded characters: ");
                         String excludedAlphabet = inputScanner.nextLine().toUpperCase();
-                        excludedAlphabet = alphabet.replaceAll("[" + excludedAlphabet + "]", "");
-                        System.out.print("Guaranteed characters: ");
-                        String guaranteedCharacters = inputScanner.nextLine().toUpperCase();
-                        puzzleSolver.solveWordle(userInput, excludedAlphabet, guaranteedCharacters);
+                        if (excludedAlphabet.length() > 0) {
+                            excludedAlphabet = alphabet.replaceAll("[" + excludedAlphabet + "]", "");
+                        } else {
+                            excludedAlphabet = alphabet;
+                        }
+                        System.out.print("Character positions (Example: 'A1B4C3'): ");
+                        String characterPositions = inputScanner.nextLine().toUpperCase();
+                        if (characterPositions.matches("([A-Za-z][1-9]\\d*)*")) { // A1B2C1...
+                            puzzleSolver.solveWordle(userInput, excludedAlphabet, characterPositions);
+                        } else {
+                            System.out.println("UNKNOWN COMMAND");
+                        }
+                        break;
                     default:
                         System.out.println("UNKNOWN COMMAND");
                 }
